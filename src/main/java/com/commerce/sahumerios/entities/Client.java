@@ -14,6 +14,7 @@ public class Client {
     @Getter @Setter private Long id;
     @Getter @Setter private String name;
     @Getter @Setter private String lastname;
+    @Getter @Setter private Integer docnumber;
 
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Getter @Setter private List<Invoice> invoices;
