@@ -2,6 +2,7 @@ package com.commerce.sahumerios.controllers;
 
 import com.commerce.sahumerios.entities.Product;
 import com.commerce.sahumerios.services.ProductsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class ProductsController {
     @Autowired private ProductsService service;
 
     @PostMapping
-    public ResponseEntity<Product>create(@RequestBody Product product){
+    public ResponseEntity<Product>create(@Valid @RequestBody Product product){
         try {
             Product newProduct = service.save(product);
             return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
@@ -51,7 +52,7 @@ public class ProductsController {
         }
     }
     @PutMapping ("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product data){
+    public ResponseEntity<Product> update(@PathVariable Long id, @Valid @RequestBody Product data){
         try{
             Optional<Product> optionalProduct = service.readOne(id);
             if (optionalProduct.isPresent()){

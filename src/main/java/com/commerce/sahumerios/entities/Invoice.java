@@ -2,7 +2,7 @@ package com.commerce.sahumerios.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,8 +11,8 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter @Setter private Long id;
-    @Getter @Setter private LocalDateTime dateTime;
-    @Getter @Setter private Double total;
+    @NotNull(message = "La fecha y hora no pueden ser nulas")@Getter @Setter private LocalDateTime dateTime;
+    @NotNull(message = "El total no puede ser nulo")@Getter @Setter private Double total;
 
     @ManyToOne @JoinColumn (name = "client_id")
     @Getter @Setter private Client client;

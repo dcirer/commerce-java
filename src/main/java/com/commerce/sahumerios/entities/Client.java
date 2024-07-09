@@ -2,6 +2,7 @@ package com.commerce.sahumerios.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public class Client {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Getter @Setter private Long id;
-    @Getter @Setter private String name;
-    @Getter @Setter private String lastname;
-    @Getter @Setter private Integer docnumber;
+    @NotNull(message = "El nombre no puede ser nulo") @Getter @Setter private String name;
+    @NotNull(message = "El apellido no puede ser nulo") @Getter @Setter private String lastname;
+    @NotNull(message = "El número de documento no puede ser nulo") @Getter @Setter private Integer docnumber;
 
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Getter @Setter private List<Invoice> invoices;

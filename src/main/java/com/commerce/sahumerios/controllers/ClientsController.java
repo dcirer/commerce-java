@@ -3,6 +3,7 @@ package com.commerce.sahumerios.controllers;
 import ch.qos.logback.core.encoder.EchoEncoder;
 import com.commerce.sahumerios.entities.Client;
 import com.commerce.sahumerios.services.ClientsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ClientsController {
     @Autowired private ClientsService service;
 
     @PostMapping
-    public ResponseEntity<Client> create(@RequestBody Client client){
+    public ResponseEntity<Client> create(@Valid @RequestBody Client client){
         try {
             Client newClient = service.save(client);
             return new ResponseEntity<>(newClient, HttpStatus.CREATED);
@@ -54,7 +55,7 @@ public class ClientsController {
 
     @PutMapping("/{id}")
 
-    public ResponseEntity<Client> update(@PathVariable Long id, @RequestBody Client data){
+    public ResponseEntity<Client> update(@PathVariable Long id, @Valid @RequestBody Client data){
         try{
             Optional<Client> optionalClient =service.readOne(id);
             if (optionalClient.isPresent()){
