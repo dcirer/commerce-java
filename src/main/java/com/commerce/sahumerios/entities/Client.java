@@ -3,6 +3,7 @@ package com.commerce.sahumerios.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.List;
 
@@ -18,9 +19,11 @@ public class Client {
     @NotNull(message = "El número de documento no puede ser nulo") @Getter @Setter private Integer docnumber;
 
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     @Getter @Setter private List<Invoice> invoices;
 
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     @Getter @Setter private List<Cart> carts;
 
 

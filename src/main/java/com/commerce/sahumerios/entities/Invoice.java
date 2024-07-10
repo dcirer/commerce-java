@@ -3,6 +3,7 @@ package com.commerce.sahumerios.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,6 +16,7 @@ public class Invoice {
     @NotNull(message = "El total no puede ser nulo")@Getter @Setter private Double total;
 
     @ManyToOne @JoinColumn (name = "client_id")
+    @JsonBackReference
     @Getter @Setter private Client client;
 
 }
