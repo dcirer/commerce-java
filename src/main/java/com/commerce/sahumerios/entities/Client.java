@@ -18,10 +18,12 @@ public class Client {
     @NotNull(message = "El apellido no puede ser nulo") @Getter @Setter private String lastname;
     @NotNull(message = "El número de documento no puede ser nulo") @Getter @Setter private Integer docnumber;
 
+    //relacion un cliente puede tener muchas facturas.
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     @Getter @Setter private List<Invoice> invoices;
 
+    //relacion un cliente puede tener muchos carritos
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     @Getter @Setter private List<Cart> carts;

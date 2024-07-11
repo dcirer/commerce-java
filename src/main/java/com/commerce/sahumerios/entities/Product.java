@@ -16,6 +16,7 @@ public class Product {
     @NotNull(message = "El stock no puede ser nulo")@Getter @Setter private Integer stock;
     @NotNull(message = "El precio no puede ser nulo")@Getter @Setter private double price;
 
+    //relacion un producto puede estar en varios carritos.
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Getter @Setter private List<Cart> carts;
 }
