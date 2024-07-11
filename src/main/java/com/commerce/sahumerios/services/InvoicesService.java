@@ -16,18 +16,19 @@ public class InvoicesService {
     @Autowired private InvoiceRepository repository;
     @Autowired private ClientRepository clientRepository;
 
+    //servicio que crea o modifica una factura en tabla invoice, utilizando el repositorio jpa.
     public Invoice save (Invoice invoice){
         return repository.save(invoice);
     }
-
+    //servicio que lee todos los datos de la tabla invoice, utilizando el repositorio jpa.
     public List<Invoice> readAll(){
         return repository.findAll();
     }
-
+    // servicio que lee un dato de la tabla invoice segun el id, utilizando el repositorio jpa.
     public Optional<Invoice> readOne(Long id){
         return repository.findById(id);
     }
-
+    //servicio que elimina un dato de la tabla invoice, utilizando el repositorio jpa.
     public Optional<Invoice> destroyOne(Long id){
         Optional<Invoice> invoice = repository.findById(id);
         if (invoice.isPresent()){
