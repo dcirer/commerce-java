@@ -54,16 +54,18 @@ public class CartController {
         }
     }
     //metodo que elimina un producto del carrito.
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Cart> removeProduct(@PathVariable Long id){
+    @DeleteMapping("/{clientId}/{productId}")
+    public ResponseEntity<Cart> removeProduct(@PathVariable Long clientId, @PathVariable Long productId) {
         try {
-            Optional<Cart> cart = cartsService.destroyOne(id);
-            if (cart.isPresent()){
-                return ResponseEntity.ok(cart.get());
-            }else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            List<Cart> carts = cartsService.readAll();
+            for (Cart cart : carts) {
+                if (cart.getClient().getId().equals(clientId) && cart.getProduct().getId().equals(productId) && !cart.isBilled()) {
+                    cartsService.destroyOne(cart.getId());
+                    return ResponseEntity.ok(cart);
+                }
             }
-        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
