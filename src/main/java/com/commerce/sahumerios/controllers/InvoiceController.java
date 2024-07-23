@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+
+
 
 @RestController
 @RequestMapping("api/v1/invoices")
@@ -62,16 +62,19 @@ public class InvoiceController {
     @GetMapping("/{clientId}")
     public ResponseEntity<Invoice> getLastInvoice(@PathVariable Long clientId) {
         try {
-            List<Invoice> invoices = invoicesService.readAll().stream()
-                    .filter(invoice -> invoice.getClient().getId().equals(clientId))
-                    .sorted((i1, i2) -> i2.getDateTime().compareTo(i1.getDateTime())) // Ordenar por fecha descendente
-                    .collect(Collectors.toList());
-            if (!invoices.isEmpty()) {
-                return ResponseEntity.ok(invoices.get(0)); // Retornar la factura más reciente
+            Optional<Client> client = clientsService.readOne(clientId);
+            if (client.isPresent()) {
+                List<Invoice> invoices = client.get().getInvoices();
+                if (!invoices.isEmpty()) {
+                    Invoice lastInvoice = invoices.get(invoices.size() - 1);
+                    return ResponseEntity.ok(lastInvoice);
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
