@@ -59,21 +59,19 @@ public class InvoiceController {
             return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/{clientId}/{invoiceId}")
-    public ResponseEntity<Invoice> read(@PathVariable Long clientId, @PathVariable Long invoiceId){
+    @GetMapping("/{clientId}")
+    public ResponseEntity<Invoice> getLastInvoice(@PathVariable Long clientId) {
         try {
-            Optional<Client> client = clientsService.readOne(clientId);
-            if (client.isPresent()){
-                Optional<Invoice> invoice = invoicesService.readOne(invoiceId);
-                if (invoice.isPresent() && invoice.get().getClient().getId().equals(clientId)){
-                    return ResponseEntity.ok(invoice.get());
-                }else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-                }
-            }else {
+            List<Invoice> invoices = invoicesService.readAll().stream()
+                    .filter(invoice -> invoice.getClient().getId().equals(clientId))
+                    .sorted((i1, i2) -> i2.getDateTime().compareTo(i1.getDateTime())) // Ordenar por fecha descendente
+                    .collect(Collectors.toList());
+            if (!invoices.isEmpty()) {
+                return ResponseEntity.ok(invoices.get(0)); // Retornar la factura más reciente
+            } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
+        } catch (Exception e){
             System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
