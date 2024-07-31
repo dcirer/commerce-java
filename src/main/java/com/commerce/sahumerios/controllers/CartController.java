@@ -6,6 +6,8 @@ import com.commerce.sahumerios.entities.Product;
 import com.commerce.sahumerios.services.CartsService;
 import com.commerce.sahumerios.services.ClientsService;
 import com.commerce.sahumerios.services.ProductsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/carts")
+@Tag(name= "Cart routes", description = "Cart CRUD")
 public class CartController {
 
     @Autowired private CartsService cartsService;
@@ -25,9 +28,8 @@ public class CartController {
     @Autowired private ProductsService productsService;
 
 
-    //Metodo para agregar productos al carrito,
-    // ademas verifica que no se agregue al carrito una cantidad que no hay en stock.
     @PostMapping("/{clientId}/{productId}/{quantity}")
+    @Operation(summary ="Metodo para agregar productos al carrito",description = "ademas verifica que no se agregue al carrito una cantidad que no hay en stock")
     public ResponseEntity<Cart> addProduct(@PathVariable Long clientId, @PathVariable Long productId, @PathVariable Integer quantity){
         try {
             Optional<Client> optionalClient = clientsService.readOne(clientId);
@@ -53,8 +55,9 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    //metodo que elimina un producto del carrito.
+
     @DeleteMapping("/{clientId}/{productId}")
+    @Operation(summary ="Metodo que elimina un producto del carrito",description = "Precisa que se le pase un idcliente y un idproduct")
     public ResponseEntity<Cart> removeProduct(@PathVariable Long clientId, @PathVariable Long productId) {
         try {
             List<Cart> carts = cartsService.readAll();
@@ -72,6 +75,7 @@ public class CartController {
     }
 
     @GetMapping("/{clientId}")
+    @Operation(summary ="Metodo que obitiene la lista de productos de un carrito",description = "Precisa el id del cliente, ademas verificar si esta facturado o no")
     public ResponseEntity<List<Cart>> getCarts(@PathVariable Long clientId){
         try {
             List<Cart> carts = cartsService.readAll().stream()

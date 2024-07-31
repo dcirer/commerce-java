@@ -8,6 +8,8 @@ import com.commerce.sahumerios.services.CartsService;
 import com.commerce.sahumerios.services.ClientsService;
 import com.commerce.sahumerios.services.InvoicesService;
 import com.commerce.sahumerios.services.ProductsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/invoices")
+@Tag(name= "Invoice routes", description = "Invoice CRUD")
 public class InvoiceController {
     @Autowired private InvoicesService invoicesService;
     @Autowired private CartsService cartsService;
@@ -28,6 +31,7 @@ public class InvoiceController {
     @Autowired private ProductsService productsService;
 
     @PostMapping("/{clientId}")
+    @Operation(summary ="Metodo para crear una factura",description = "Precisa un idclient para buscar el carrito asignado al cliente, verifica que no este facturado, luego de crear la factura descuenta en el stock del producto, ademas de hacer la cuenta del total para la factura.")
     public ResponseEntity<Invoice> generateInvoice(@PathVariable Long clientId) {
         Optional<Client> client = clientsService.readOne(clientId);
         if (client.isPresent()) {
@@ -60,6 +64,7 @@ public class InvoiceController {
         }
     }
     @GetMapping("/{clientId}")
+    @Operation(summary ="Metodo para buscar y visualizar la ultima factura del cliente",description = "Precisa el id para buscar las facturas que hay de un cliente en particular.")
     public ResponseEntity<Invoice> getLastInvoice(@PathVariable Long clientId) {
         try {
             Optional<Client> client = clientsService.readOne(clientId);

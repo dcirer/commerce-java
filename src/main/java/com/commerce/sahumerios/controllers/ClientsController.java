@@ -3,6 +3,8 @@ package com.commerce.sahumerios.controllers;
 import ch.qos.logback.core.encoder.EchoEncoder;
 import com.commerce.sahumerios.entities.Client;
 import com.commerce.sahumerios.services.ClientsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +16,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/clients")
+@Tag(name= "Client routes", description = "Client CRUD")
 public class ClientsController {
     @Autowired private ClientsService service;
 
     @PostMapping
+    @Operation(summary ="Metodo para crear un cliente",description = "Necesita que le pasen un objeto con los datos del cliente y devuelve el cliente creado")
     public ResponseEntity<Client> create(@Valid @RequestBody Client client){
         try {
             Client newClient = service.save(client);
@@ -28,6 +32,7 @@ public class ClientsController {
         }
     }
     @GetMapping
+    @Operation(summary ="Metodo para obtener todos los clientes",description = "Detalla una lista con todos los clientes.")
     public ResponseEntity<List<Client>> readAll (){
         try{
             List<Client> clients = service.readAll();
@@ -39,6 +44,7 @@ public class ClientsController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary ="Busca y visualiza un cliente",description = "Precisa un idclient para buscar.")
     public ResponseEntity<Client> read(@PathVariable Long id){
         try{
             Optional<Client> client = service.readOne(id);
@@ -54,7 +60,7 @@ public class ClientsController {
     }
 
     @PutMapping("/{id}")
-
+    @Operation(summary ="Metodo para actualizar un cliente",description = "Precisa un idclient para buscar y modificar")
     public ResponseEntity<Client> update(@PathVariable Long id, @Valid @RequestBody Client data){
         try{
             Optional<Client> optionalClient =service.readOne(id);
@@ -81,6 +87,7 @@ public class ClientsController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary ="Metodo para eliminar un cliente",description = "Precisa un idclient para buscar y eliminar")
     public ResponseEntity<Client> destroy(@PathVariable Long id){
         try {
             Optional<Client> client = service.destroyOne(id);

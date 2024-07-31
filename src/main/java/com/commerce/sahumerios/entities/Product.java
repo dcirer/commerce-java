@@ -1,5 +1,6 @@
 package com.commerce.sahumerios.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.*;
@@ -18,5 +19,6 @@ public class Product {
 
     //relacion un producto puede estar en varios carritos.
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     @Getter @Setter private List<Cart> carts;
 }
