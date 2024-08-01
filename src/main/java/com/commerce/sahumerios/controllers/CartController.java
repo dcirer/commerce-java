@@ -7,6 +7,8 @@ import com.commerce.sahumerios.services.CartsService;
 import com.commerce.sahumerios.services.ClientsService;
 import com.commerce.sahumerios.services.ProductsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,12 @@ public class CartController {
 
     @PostMapping("/{clientId}/{productId}/{quantity}")
     @Operation(summary ="Metodo para agregar productos al carrito",description = "ademas verifica que no se agregue al carrito una cantidad que no hay en stock")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Producto agregado correctamente al carrito"),
+            @ApiResponse(responseCode = "400", description = "Cantidad solicitada excede el stock disponible"),
+            @ApiResponse(responseCode = "404", description = "Cliente o producto no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     public ResponseEntity<Cart> addProduct(@PathVariable Long clientId, @PathVariable Long productId, @PathVariable Integer quantity){
         try {
             Optional<Client> optionalClient = clientsService.readOne(clientId);
@@ -58,6 +66,11 @@ public class CartController {
 
     @DeleteMapping("/{clientId}/{productId}")
     @Operation(summary ="Metodo que elimina un producto del carrito",description = "Precisa que se le pase un idcliente y un idproduct")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Producto eliminado correctamente del carrito"),
+            @ApiResponse(responseCode = "404", description = "Cliente o producto no encontrado en el carrito"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     public ResponseEntity<Cart> removeProduct(@PathVariable Long clientId, @PathVariable Long productId) {
         try {
             List<Cart> carts = cartsService.readAll();
@@ -76,6 +89,11 @@ public class CartController {
 
     @GetMapping("/{clientId}")
     @Operation(summary ="Metodo que obitiene la lista de productos de un carrito",description = "Precisa el id del cliente, ademas verificar si esta facturado o no")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Lista de productos del carrito obtenida correctamente"),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     public ResponseEntity<List<Cart>> getCarts(@PathVariable Long clientId){
         try {
             List<Cart> carts = cartsService.readAll().stream()

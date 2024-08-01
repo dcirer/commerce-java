@@ -9,6 +9,8 @@ import com.commerce.sahumerios.services.ClientsService;
 import com.commerce.sahumerios.services.InvoicesService;
 import com.commerce.sahumerios.services.ProductsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,11 @@ public class InvoiceController {
 
     @PostMapping("/{clientId}")
     @Operation(summary ="Metodo para crear una factura",description = "Precisa un idclient para buscar el carrito asignado al cliente, verifica que no este facturado, luego de crear la factura descuenta en el stock del producto, ademas de hacer la cuenta del total para la factura.")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Devuelve correctamente los productos del carrito de un cliente"),
+            @ApiResponse(responseCode = "404", description = "No devuelve nada, no se encontro el cliente"),
+            @ApiResponse(responseCode = "500", description = "El servidor se cayo por problemas diversos")
+    })
     public ResponseEntity<Invoice> generateInvoice(@PathVariable Long clientId) {
         Optional<Client> client = clientsService.readOne(clientId);
         if (client.isPresent()) {
@@ -65,6 +72,11 @@ public class InvoiceController {
     }
     @GetMapping("/{clientId}")
     @Operation(summary ="Metodo para buscar y visualizar la ultima factura del cliente",description = "Precisa el id para buscar las facturas que hay de un cliente en particular.")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Devuelve correctamente la ultima factura del cliente"),
+            @ApiResponse(responseCode = "404", description = "No se encontraron facturas para el cliente o no se encontro el cliente"),
+            @ApiResponse(responseCode = "500", description = "El servidor se cayo por problemas diversos")
+    })
     public ResponseEntity<Invoice> getLastInvoice(@PathVariable Long clientId) {
         try {
             Optional<Client> client = clientsService.readOne(clientId);

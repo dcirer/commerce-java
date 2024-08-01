@@ -3,6 +3,8 @@ package com.commerce.sahumerios.controllers;
 import com.commerce.sahumerios.entities.Product;
 import com.commerce.sahumerios.services.ProductsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,10 @@ public class ProductsController {
 
     @PostMapping
     @Operation(summary ="Metodo para crear un producto",description = "Necesita que le pasen un objeto con los datos del producto y devuelve el producto creado")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "201", description = "Producto creado correctamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     public ResponseEntity<Product>create(@Valid @RequestBody Product product){
         try {
             Product newProduct = service.save(product);
@@ -33,6 +39,10 @@ public class ProductsController {
     }
     @GetMapping
     @Operation(summary ="Metodo para visualizar la lista de productos",description = "")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Lista de productos obtenida correctamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     public ResponseEntity<List<Product>> readAll(){
         try{
             List<Product> products = service.readAll();
@@ -45,6 +55,11 @@ public class ProductsController {
 
     @GetMapping("/{id}")
     @Operation(summary ="Metodo buscar y visualizar un producto",description = "Precisa un idproduct para buscar en la lista y visualizar.")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Producto obtenido correctamente"),
+            @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     public ResponseEntity<Product> read(@PathVariable Long id){
         try{
             Optional<Product> product = service.readOne(id);
@@ -60,6 +75,11 @@ public class ProductsController {
     }
     @PutMapping ("/{id}")
     @Operation(summary ="Metodo para modificar un producto",description = "Precisa un idproduct para buscar y modificar un producto")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Producto actualizado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor\"")
+    })
     public ResponseEntity<Product> update(@PathVariable Long id, @Valid @RequestBody Product data){
         try{
             Optional<Product> optionalProduct = service.readOne(id);
@@ -85,6 +105,11 @@ public class ProductsController {
     }
     @DeleteMapping("/{id}")
     @Operation(summary ="Metodo para eliminar un producto",description = "Precisa un idproduct para buscar y eliminar un producto")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "Producto eliminado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     public ResponseEntity<Product> destroy(@PathVariable Long id){
         try {
             Optional<Product> product = service.destroyOne(id);
